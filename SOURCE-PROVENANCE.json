@@ -1,0 +1,234 @@
+{
+  "source_project": "RidgefieldSoftware",
+  "source_commit": "0440f1ecb192e95dd926d69b88b5c3bb08a99a90",
+  "history_imported": false,
+  "files": {
+    "healthcare-demo/.streamlit/config.toml": {
+      "path": ".streamlit/config.toml",
+      "sha256": "ddbd5413c26f8f3371455df893bd83289963e162345c3b9714a5e954f033a094"
+    },
+    "healthcare-demo/README.md": {
+      "path": "README.md",
+      "sha256": "24f1c5b7df96d7f6add61d4fd8d820d964dbf43383afbdebb5a5c71da9320320"
+    },
+    "healthcare-demo/app/drift_communities_entry.py": {
+      "path": "app/drift_communities_entry.py",
+      "sha256": "1ec79b9dce3a4bb2640387b06c44db5fd5ba6985f9ca1d1c674116ae62d77390"
+    },
+    "healthcare-demo/docs/CommunityPipeline.svg": {
+      "path": "docs/CommunityPipeline.svg",
+      "sha256": "c9e6ca6d5812bdc436aa08eb3860caf68f759729b5fbbde7ace4967556fe9cee"
+    },
+    "healthcare-demo/docs/about.md": {
+      "path": "docs/about.md",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "healthcare-demo/docs/architecture.svg": {
+      "path": "docs/architecture.svg",
+      "sha256": "ef3fa2d34246f4c2ccc850a923f0dbb4262942e93b57b8153a9e9b5baaf8d7d6"
+    },
+    "healthcare-demo/docs/neo4j.svg": {
+      "path": "docs/neo4j.svg",
+      "sha256": "0d56246f2be1f8c31de3befcaf0eca42460e93199c1477aadbf465aab183b9f0"
+    },
+    "healthcare-demo/docs/neo4j_data_model.drawio": {
+      "path": "docs/neo4j_data_model.drawio",
+      "sha256": "949f7e62a3a3fabf1e4f1b0d33a530e68d37cd26efffaf900df7fd4f1fb2351e"
+    },
+    "healthcare-demo/docs/provider_review.drawio": {
+      "path": "docs/provider_review.drawio",
+      "sha256": "5586d704d26f2abb020869d0b2d46382dc94219abcc6acfad9fec695e737b38e"
+    },
+    "healthcare-demo/frontend/index.html": {
+      "path": "frontend/index.html",
+      "sha256": "9605a32b368f25ca5104b044085260fec067c45ceec11233c4bb5ac566a7f004"
+    },
+    "healthcare-demo/frontend/package-lock.json": {
+      "path": "frontend/package-lock.json",
+      "sha256": "22dffb814f354122e2d4925f47bea0d2698aa345b358db428972fe21550ca305"
+    },
+    "healthcare-demo/frontend/package.json": {
+      "path": "frontend/package.json",
+      "sha256": "8052709d2118517152b3141438170a203a61076802a4ccbefa11341ec845b59b"
+    },
+    "healthcare-demo/frontend/src/app-url.js": {
+      "path": "frontend/src/app-url.js",
+      "sha256": "2cc5de84110d41f41e31f75dd1922051e0f7130b9531b5e1ebf5542bc4a6186f"
+    },
+    "healthcare-demo/frontend/src/components/ui/button.jsx": {
+      "path": "frontend/src/components/ui/button.jsx",
+      "sha256": "54c148566e44cacaf7205e14c394ac8a02f08a3d4de8e44e61271a7817293829"
+    },
+    "healthcare-demo/frontend/src/main.jsx": {
+      "path": "frontend/src/main.jsx",
+      "sha256": "6e50ff594fe60d59577985db2643963304841533787467f29ab4255cda7926d3"
+    },
+    "healthcare-demo/frontend/src/styles.css": {
+      "path": "frontend/src/styles.css",
+      "sha256": "54b7a56b60d7dc63698ed3d6149e53877be24042874cf487c2014240c296fd14"
+    },
+    "healthcare-demo/frontend/vite.config.js": {
+      "path": "frontend/vite.config.js",
+      "sha256": "2ee7631a2605a239b7973f5cf39555dd171f6d268273a400c082a2edf8cc85f4"
+    },
+    "healthcare-demo/pipelines/ecs_build/__init__.py": {
+      "path": "pipelines/ecs_build/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "healthcare-demo/pipelines/ecs_build/build_provider_similarity_edges.py": {
+      "path": "pipelines/ecs_build/build_provider_similarity_edges.py",
+      "sha256": "06d6a41c1b6806593626d0223c728b88bd466d4c6abbb4d7bde556ba34806d91"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/__init__.py": {
+      "path": "pipelines/ecs_build/provider_graph/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/cli.py": {
+      "path": "pipelines/ecs_build/provider_graph/cli.py",
+      "sha256": "aae5eead63257b52728047426d746062c36162da141fccf1e20ad3c1adb10ff2"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/config.py": {
+      "path": "pipelines/ecs_build/provider_graph/config.py",
+      "sha256": "fd082b968a50eba20b99f21c9500d0daaa33be2ac33321552a3a62b12a88c546"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/features.py": {
+      "path": "pipelines/ecs_build/provider_graph/features.py",
+      "sha256": "a01a1850a65e2e7beb297f33f15f2d64b4ec9ec7ff098fa0517ddcebebbdd6b8"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/io_arrow.py": {
+      "path": "pipelines/ecs_build/provider_graph/io_arrow.py",
+      "sha256": "a638e781c27ade4dc96d4601fb8adfcfff1f56c171a428e50980e38dfa1980b2"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/neo.py": {
+      "path": "pipelines/ecs_build/provider_graph/neo.py",
+      "sha256": "4b298bddf878c5382a04f12ceeed349697e9d0e8390d9280817a025b90830836"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/pipeline.py": {
+      "path": "pipelines/ecs_build/provider_graph/pipeline.py",
+      "sha256": "6d809e7463f6428de508970c142b5d7b1d5ce39e198a7b1797d74fe3534feba7"
+    },
+    "healthcare-demo/pipelines/ecs_build/provider_graph/similarity.py": {
+      "path": "pipelines/ecs_build/provider_graph/similarity.py",
+      "sha256": "e115dc72237b9aaefaff66f8033e9fe1acd7793408df9162981f81c8a906d62e"
+    },
+    "healthcare-demo/pipelines/ecs_build/pyproject.toml": {
+      "path": "pipelines/ecs_build/pyproject.toml",
+      "sha256": "22ca3ca9c69b062607d95e26e826858ac590ebc79b23eae8ecacff7c98741dc7"
+    },
+    "healthcare-demo/pipelines/ecs_build/tests/__init__.py": {
+      "path": "pipelines/ecs_build/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "healthcare-demo/pipelines/ecs_build/tests/test_features.py": {
+      "path": "pipelines/ecs_build/tests/test_features.py",
+      "sha256": "3c34dbce5915f928880c67fb8d505e843f8e6ad509d3a6b77765a27614f66c5c"
+    },
+    "healthcare-demo/pipelines/ecs_build/tests/test_neo.py": {
+      "path": "pipelines/ecs_build/tests/test_neo.py",
+      "sha256": "404b3f89bff750b118d0e16febfa8931f2957a6429ffb322108a8b0c749e61f1"
+    },
+    "healthcare-demo/pipelines/ecs_build/tests/test_similarity.py": {
+      "path": "pipelines/ecs_build/tests/test_similarity.py",
+      "sha256": "e06ee40794322e35d2a33108a4337b64693305108bd50dcf5e11709cac59164c"
+    },
+    "healthcare-demo/pipelines/glue/jobs/build_provider_features.py": {
+      "path": "pipelines/glue/jobs/build_provider_features.py",
+      "sha256": "2e37bdf57c562e412cc310a89f3286f2c7314fb4e81c93da44217ec59fc753ae"
+    },
+    "healthcare-demo/pipelines/glue/jobs/build_provider_vectors.py": {
+      "path": "pipelines/glue/jobs/build_provider_vectors.py",
+      "sha256": "811f31278a2b43d7ad58a175b9d000ca1aa0b3ba49a38d332a57639593cbf0e3"
+    },
+    "healthcare-demo/pipelines/glue/jobs/normalize_provider_vectors.py": {
+      "path": "pipelines/glue/jobs/normalize_provider_vectors.py",
+      "sha256": "990fbf446ada650165279249274bd3e738d3922980adb0c5dd35b1205c3dd611"
+    },
+    "healthcare-demo/requirements-ui.txt": {
+      "path": "requirements-ui.txt",
+      "sha256": "7f1da211525c9f97e2c9fed589c5f5b6c06ca3521264eb8094517f4e6ca1efd9"
+    },
+    "healthcare-demo/requirements.txt": {
+      "path": "requirements.txt",
+      "sha256": "5a657c3ea442642f51f6dbf17e5e3a250f306dfe005c3fc1b9ed593e819210a6"
+    },
+    "healthcare-demo/scripts/run_local.py": {
+      "path": "scripts/run_local.py",
+      "sha256": "e7fad3f67a081811855e18c6a15c55d43115e2bd1a5ba05d6aff075072988e53"
+    },
+    "healthcare-demo/scripts/seed_neo4j.py": {
+      "path": "scripts/seed_neo4j.py",
+      "sha256": "ebd49e134539b9d5c9980144f31da635adcd41f59ce1ee1d6ff3529b0b690563"
+    },
+    "healthcare-demo/src/drift_communities/__init__.py": {
+      "path": "src/drift_communities/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "healthcare-demo/src/drift_communities/api.py": {
+      "path": "src/drift_communities/api.py",
+      "sha256": "21e6d768b75b282bddf227574891bc9f4611d039eee37f9a6aa46cdfae52483a"
+    },
+    "healthcare-demo/src/drift_communities/app.py": {
+      "path": "src/drift_communities/app.py",
+      "sha256": "309dc1e79963bb11e51a376642ae0cd17045f252d178828ef711e60b9ef1a473"
+    },
+    "healthcare-demo/src/drift_communities/explain.py": {
+      "path": "src/drift_communities/explain.py",
+      "sha256": "d39d7d9738a990b47d7bc5883ab41a4713532440d8443e4bb2c7745e708cec29"
+    },
+    "healthcare-demo/src/drift_communities/explain_context.py": {
+      "path": "src/drift_communities/explain_context.py",
+      "sha256": "34735692828947d97f909969829c20fb269e7303aa93fe9b2db5adf16fc965ab"
+    },
+    "healthcare-demo/src/drift_communities/graph_viz.py": {
+      "path": "src/drift_communities/graph_viz.py",
+      "sha256": "3f79f1d9f59b4ff236a1ac277a4832740dd74670a8daf674469d2839b19f3180"
+    },
+    "healthcare-demo/src/drift_communities/llm_bedrock.py": {
+      "path": "src/drift_communities/llm_bedrock.py",
+      "sha256": "a956e2f466574f2dbdda8a9ab45fc083967856a50268f610dbb34bf53897481c"
+    },
+    "healthcare-demo/src/drift_communities/llm_openai.py": {
+      "path": "src/drift_communities/llm_openai.py",
+      "sha256": "1b7e31790197b32818581554933be624c3d1c5f115a182de9955de9f47b8448b"
+    },
+    "healthcare-demo/src/drift_communities/neo.py": {
+      "path": "src/drift_communities/neo.py",
+      "sha256": "c0f3e63dfb247701f89b9396b18bb2468cfcb603a07bc3e0ed23467905b212a8"
+    },
+    "healthcare-demo/src/drift_communities/queries.py": {
+      "path": "src/drift_communities/queries.py",
+      "sha256": "af2482e5e59d394f545bf90dad5aeff4ca25399bb0a3a7663e5b50acc446fc53"
+    },
+    "healthcare-demo/src/drift_communities/ui_events.py": {
+      "path": "src/drift_communities/ui_events.py",
+      "sha256": "f74dfb56e0bbe9a8f66746e9e2c5b4b3331895e00161fec19ea36e91b82affe8"
+    },
+    "healthcare-demo/tests/conftest.py": {
+      "path": "tests/conftest.py",
+      "sha256": "f0f8fdf7cdc24a681b87f3be757c190d439e2e8531c6046150a97b400110ced9"
+    },
+    "healthcare-demo/tests/drift_communities/test_explain_context.py": {
+      "path": "tests/drift_communities/test_explain_context.py",
+      "sha256": "a24daa2382c7b8b932f1d32679d88418557827d3a913fd1d99c3efb75f15cd31"
+    },
+    "healthcare-demo/tests/drift_communities/test_graph_viz_and_neo.py": {
+      "path": "tests/drift_communities/test_graph_viz_and_neo.py",
+      "sha256": "405c7e8eaca4f1bc075ea2f131235a0c0d9e3a1a267d04d61c5e0abd156fbeea"
+    },
+    "healthcare-demo/tests/drift_communities/test_llm_bedrock_helpers.py": {
+      "path": "tests/drift_communities/test_llm_bedrock_helpers.py",
+      "sha256": "5392b80a04fee85e0bac3f5cb287d38ab35ce49e84019d8f0492a184eaf8f927"
+    },
+    "healthcare-demo/tools/diag_import_app_main.py": {
+      "path": "tools/diag_import_app_main.py",
+      "sha256": "925b0c1fd3204ca252b19499ce873827a74c7da00f58fad17edc8ec43e572d81"
+    }
+  },
+  "excluded": [
+    "consultancy website and other applications",
+    "original private git history",
+    "credentials, ignored files and runtime databases",
+    "old cloud-site and account-specific deployment infrastructure",
+    "S3 database dump loader and private deployment runbook"
+  ]
+}
