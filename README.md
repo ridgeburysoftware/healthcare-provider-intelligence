@@ -70,6 +70,10 @@ Tests include the existing query/evidence and graph-writing unit tests, pipeline
 
 `pipelines/glue/jobs/` contains the source project's AWS Glue/PySpark transformations; those jobs need their managed AWS runtime. The graph pipeline requires explicitly supplied `DRUGS_S3`, `HCPCS_S3`, `UNIFIED_S3`, run settings, and Neo4j credentials. No production S3 location, AWS credentials, Terraform state, or database dump is included. `scripts/seed_neo4j.py` is a retained data-loading utility that requires separately supplied parquet files and explicit database settings; it is not run during startup.
 
+## Repository cleanup
+
+See [the cleanup inventory](docs/CLEANUP-INVENTORY.md) for removed obsolete files, retained entry points, and follow-up candidates.
+
 ## Provenance and scope
 
 Extracted from RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90` with a fresh repository history. See [SOURCE-PROVENANCE.json](SOURCE-PROVENANCE.json) and [EXTRACTION-REPORT.md](EXTRACTION-REPORT.md). The original checkout, existing containers, graph, and other apps are unchanged.

@@ -10,4 +10,3 @@ networkx==3.6.1
 boto3==1.42.47
 openai==2.18.0
 langchain-core==1.4.7
-streamlit-plotly-events==0.0.6
