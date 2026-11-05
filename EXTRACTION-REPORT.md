@@ -4,7 +4,7 @@ Date: November 4, 2026.
 
 ## Source and contents
 
-Extracted 55 tracked application files from `healthcare-demo/` at RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90`. The application folder was flattened into this standalone repository root. Original file paths and SHA-256 values are recorded in [SOURCE-PROVENANCE.json](SOURCE-PROVENANCE.json).
+Extracted 55 tracked application files from `healthcare-demo/` at RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90`. The application folder was flattened into this standalone repository root.
 
 Included:
 
