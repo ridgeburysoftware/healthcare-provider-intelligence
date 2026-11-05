@@ -22,12 +22,6 @@ This repository presents the implementation and engineering artifacts. The popul
 
 ![Healthcare Provider Intelligence review workspace and provider similarity graph](https://ridgeburysoftware.com/assets/provider-intelligence-workspace.png)
 
-**Underlying evidence** — recorded service/drug utilization compared with similarity peers.
-
-![Provider utilization evidence and peer comparisons](https://ridgeburysoftware.com/assets/provider-intelligence-evidence.png)
-
-These static previews show prepared CMS-derived analysis. Images are hosted on the Ridgebury Software project site; datasets and analysis artifacts are not embedded in this repository.
-
 ## Original AWS architecture and deployment
 
 The original implementation ran on AWS. Glue/PySpark jobs transformed CMS data into S3 datasets; the Python/FAISS pipeline built similarity relationships and communities for Neo4j. The original Streamlit application ran on ECS/Fargate, with Bedrock providing optional generative AI integration.
@@ -40,8 +34,6 @@ The infrastructure source includes ECS/Fargate, an Application Load Balancer, VP
 - [ECS/Fargate configuration](infra/aws/ecs/)
 - [Glue configuration](infra/aws/glue/)
 - [Generated Terraform dependency diagrams](docs/terraform/README.md)
-
-Account-specific image locations, the Bedrock inference-profile ARN, and the original S3 bucket have been replaced by inputs. The Terraform preserves historical workload assumptions, including separately supplied images, networking inputs, data, and job arguments; those prerequisites and limitations are documented in the infrastructure README.
 
 The current React/FastAPI demonstration is hosted independently of AWS and uses OpenAI for optional evidence explanations. The historical AWS Terraform describes the original deployment and does not configure the current hosted demo. The architecture image provides a platform overview; the dependency diagrams are generated directly from the retained Terraform resource definitions.
 
@@ -145,10 +137,6 @@ Tests use synthetic vectors and mocked query/model responses. They cover native 
 
 Keep large CMS datasets, generated FAISS indexes, processed artifacts, secrets, credentials, private environment files, Terraform state/plans, and database dumps outside committed source. Local configuration and data belong in ignored paths such as `.env`, `.local-data/`, or `data/`; verify exclusion before adding generated files. The checked-in `.env.example` contains configuration names without credentials.
 
-## Provenance and scope
-
-The application was extracted from RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90` with a fresh repository history. [SOURCE-PROVENANCE.json](SOURCE-PROVENANCE.json) and [EXTRACTION-REPORT.md](EXTRACTION-REPORT.md) record that extraction. The original checkout and its applications were left unchanged.
-
-The historical ECS/Fargate and Glue Terraform was added afterward with deployment-specific settings replaced by inputs; its source hashes are recorded in [infra/aws/SOURCE-PROVENANCE.json](infra/aws/SOURCE-PROVENANCE.json). The original marketing-site infrastructure, private runbook, and S3 dump-restoration container remain excluded.
+## License
 
 This repository does not grant a new open-source license for original project code; third-party dependencies retain their licenses.
