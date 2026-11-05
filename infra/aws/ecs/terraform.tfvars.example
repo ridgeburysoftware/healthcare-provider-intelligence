@@ -1,0 +1,16 @@
+# Example values only. Copy to an ignored terraform.tfvars and supply your own resources.
+region                      = "us-east-1"
+app_image_uri               = "000000000000.dkr.ecr.us-east-1.amazonaws.com/provider-streamlit:example"
+neo4j_image_uri             = "000000000000.dkr.ecr.us-east-1.amazonaws.com/neo4j:example"
+loader_image_uri            = "000000000000.dkr.ecr.us-east-1.amazonaws.com/provider-loader:example"
+artifacts_bucket            = "your-provider-artifacts-bucket"
+bedrock_model_id            = ""
+vpc_id                      = "vpc-REPLACE_ME"
+private_subnet_ids          = ["subnet-REPLACE_A", "subnet-REPLACE_B"]
+private_route_table_ids     = ["rtb-REPLACE_ME"]
+app_task_sg_id              = "sg-REPLACE_ME"
+alb_sg_id                   = "sg-REPLACE_ME"
+vpce_sg_id                  = "sg-REPLACE_ME"
+ecs_cluster_name            = "REPLACE_ME"
+ecs_task_execution_role_arn = "arn:aws:iam::000000000000:role/REPLACE_ME"
+neo4j_auth_secret_arn       = "arn:aws:secretsmanager:us-east-1:000000000000:secret:REPLACE_ME"

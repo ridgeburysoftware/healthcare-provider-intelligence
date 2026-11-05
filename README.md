@@ -70,6 +70,10 @@ Tests include the existing query/evidence and graph-writing unit tests, pipeline
 
 `pipelines/glue/jobs/` contains the source project's AWS Glue/PySpark transformations; those jobs need their managed AWS runtime. The graph pipeline requires explicitly supplied `DRUGS_S3`, `HCPCS_S3`, `UNIFIED_S3`, run settings, and Neo4j credentials. No production S3 location, AWS credentials, Terraform state, or database dump is included. `scripts/seed_neo4j.py` is a retained data-loading utility that requires separately supplied parquet files and explicit database settings; it is not run during startup.
 
+## Original AWS infrastructure
+
+The historical [ECS/Fargate and Glue Terraform](infra/aws/README.md) is included with account-specific settings replaced by inputs. It documents the original AWS implementation; the current React/FastAPI demo uses a separate deployment. See the [generated dependency diagrams](docs/terraform/README.md) and the infrastructure README for prerequisites, retained historical limitations, and local validation commands.
+
 ## Repository cleanup
 
 See [the cleanup inventory](docs/CLEANUP-INVENTORY.md) for removed obsolete files, retained entry points, and follow-up candidates.
@@ -78,6 +82,6 @@ See [the cleanup inventory](docs/CLEANUP-INVENTORY.md) for removed obsolete file
 
 Extracted from RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90` with a fresh repository history. See [SOURCE-PROVENANCE.json](SOURCE-PROVENANCE.json) and [EXTRACTION-REPORT.md](EXTRACTION-REPORT.md). The original checkout, existing containers, graph, and other apps are unchanged.
 
-The account-specific AWS infrastructure, old cloud marketing site, private runbook, and original S3 dump-restoration container were excluded. Architecture diagrams remain under `docs/`. No cloud infrastructure or public application deployment was performed.
+The original extraction excluded AWS infrastructure; a later publication pass added the ECS/Fargate and Glue Terraform under `infra/aws/` with deployment-specific inputs. The old cloud marketing site, private runbook, and original S3 dump-restoration container remain excluded. Architecture diagrams remain under `docs/`. No cloud infrastructure or public application deployment was performed.
 
 Drift and similarity differences do not establish fraud, clinical appropriateness, or compliance. This repository does not grant a new open-source license for original project code; third-party dependencies retain their licenses.

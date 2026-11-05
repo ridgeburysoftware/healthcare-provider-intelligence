@@ -27,3 +27,8 @@ data/
 .vscode/
 .idea/
 .DS_Store
+*.tfplan
+*.tfplan.json
+*.auto.tfvars.json
+*.tfvars.json
+crash.*.log

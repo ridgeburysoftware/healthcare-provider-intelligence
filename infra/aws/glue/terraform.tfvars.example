@@ -1,0 +1,6 @@
+# Example values only. Copy to an ignored terraform.tfvars.
+region                = "us-east-1"
+artifacts_bucket      = "your-provider-artifacts-bucket"
+athena_results_prefix = "athena-results/"
+cms_raw_prefix        = "cms/raw/"
+run_id                = "RUN_2023_01"

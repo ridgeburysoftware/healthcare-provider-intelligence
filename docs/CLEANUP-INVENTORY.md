@@ -29,7 +29,7 @@ Removal of an unreferenced module is based on this repository's entry points. Th
 | Bedrock adapter and LangChain parser | AI provider selection, original Streamlit UI, parser tests | Supported optional AWS path. Keep both adapter and dependencies. |
 | Original Streamlit UI | `scripts/run_local.py --legacy` -> `app/drift_communities_entry.py` -> `drift_communities.app` | Explicitly supported alternative interface. Keep, including `.streamlit/config.toml`, Streamlit, and Plotly dependencies. |
 | Modular graph pipeline | `python -m provider_graph.cli` with `pipelines/ecs_build` on `PYTHONPATH`; tests import its features, Neo4j payloads, and similarity modules | Keep FAISS, Louvain, feature generation, and graph writes. This is batch engineering code, not web request code. |
-| AWS Glue jobs | Managed Glue/PySpark job scripts under `pipelines/glue/jobs` | External job entry points. No local imports are expected; keep. |
+| AWS Glue jobs | Managed Glue/PySpark job scripts under `pipelines/glue/jobs`, referenced by `infra/aws/glue` | External job entry points. No local imports are expected; keep. |
 | Parquet loader | `scripts/seed_neo4j.py`, documented in README | Explicit data-loading utility; keep. It is not an application startup task. |
 | Architecture and data-model diagrams | `docs/*.svg`, `docs/*.drawio` | Portfolio and design artifacts; keep. Lack of a runtime import does not make a diagram unused. |
 | Extraction report and provenance manifest | README provenance links | Historical audit records; keep unchanged. |
@@ -49,3 +49,7 @@ Removal of an unreferenced module is based on this repository's entry points. Th
 Before and after cleanup: **45 Python tests passed** and the React production build passed. After cleanup, `pip check` reported no broken requirements; `git diff --check` passed; all 38 remaining Python files compiled. The retained API, Streamlit, OpenAI, Bedrock, and modular pipeline CLI imported successfully with the removed click-event package made unavailable and database/model client creation blocked. FAISS emitted three existing upstream SWIG deprecation warnings. The installed environment was checked in place; a fresh dependency installation and full Docker rebuild were not performed.
 
 Tests use synthetic/mocked data, including native FAISS, evidence/query helpers, Neo4j payloads, OpenAI request/response handling, and API behavior. They do not execute AWS Glue jobs, a full CMS ingestion, or a live model request. No database or cloud resources need to be changed for this cleanup.
+
+## AWS source added after the first cleanup pass
+
+The `infra/aws/ecs` and `infra/aws/glue` roots were subsequently copied from the original implementation, with account-specific image/Bedrock/S3 settings replaced by inputs. They are retained historical infrastructure entry points. See [their README](../infra/aws/README.md) for the original workload assumptions and known limitations; the initial extraction report remains unchanged as a historical record. Generated dependency diagrams live under `docs/terraform`, with regeneration via `scripts/terraform_diagrams.py`. This addition does not resolve the monolithic pipeline or legacy-UI decisions above.

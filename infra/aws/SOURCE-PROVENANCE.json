@@ -1,0 +1,95 @@
+{
+  "source_repository": "RidgefieldSoftware",
+  "source_commit": "0440f1ecb192e95dd926d69b88b5c3bb08a99a90",
+  "purpose": "Historical AWS implementation, with account-specific settings parameterized for publication.",
+  "files": [
+    {
+      "source": "healthcare-demo/infra-ecs/efs.tf",
+      "source_sha256": "dfe7a1837352172acd3d64df58150d3879bd07a159d6c825c6ff2f00fb11dd7b",
+      "destination": "infra/aws/ecs/efs.tf",
+      "published_sha256": "5cb0eaa6b6b00314f1b8bf4303d3a732b88551caa739e6e27849742ea0e0b989"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/endpoints.tf",
+      "source_sha256": "b1d88cb8981485144f1389dbb4cdb089b352e6b6b2db7656473ff80dca714e7a",
+      "destination": "infra/aws/ecs/endpoints.tf",
+      "published_sha256": "d8c6ae00414f5aef762db56d76c19e99426c7625fab2473c696bcc9c294c8a04"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/main.tf",
+      "source_sha256": "3a848ec4e7540ba49f952eb374d4a0d47387458237b4698dcd99fa3bde0cdf1b",
+      "destination": "infra/aws/ecs/main.tf",
+      "published_sha256": "7d696e394582658708eb212cab4516115174a9becece8dff14fae208a8e3f986"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/neo4j.tf",
+      "source_sha256": "61b674410c1ee609b07ff173569e70502dc021180b8e902f64f6624982446239",
+      "destination": "infra/aws/ecs/neo4j.tf",
+      "published_sha256": "8033438264e3e66c977dd123799ff74f19c082e11fc0adb1ed0cbadafd220572"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/neo4j_loader.tf",
+      "source_sha256": "62357b3ca70d08442ecfdf8773aa8c4dca6db1822f45789ab72f070bda52601c",
+      "destination": "infra/aws/ecs/neo4j_loader.tf",
+      "published_sha256": "8635abfd0fe36a52588a2bb44a7c51990987bb854da04c6e98b472a1443d1c4a"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/private_subnets.tf",
+      "source_sha256": "2fa87cf8ede821021f1a1b1f65e61319ae0aff557b5e998f69238b3d859da26d",
+      "destination": "infra/aws/ecs/private_subnets.tf",
+      "published_sha256": "bfd2e545323b1feb6750a091399a25f175515eed5c78326fa7529aa1f4b6ed03"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/variables.tf",
+      "source_sha256": "fa9f0afad9645a9b4890bd41f282854ddd794ee0792672ca8fc5cfbabd78b626",
+      "destination": "infra/aws/ecs/variables.tf",
+      "published_sha256": "ade97f60f9765b82d00d5d15d690d11e6e3995ec108c5eeeca301e98f0e725ed"
+    },
+    {
+      "source": "healthcare-demo/infra-ecs/vpce_sg.tf",
+      "source_sha256": "dc01bfca3841b2de4e8e13171121fa8deeda1f4a0bd563e2045d1140b74f95b6",
+      "destination": "infra/aws/ecs/vpce_sg.tf",
+      "published_sha256": "d0fcde043ade4f2706a57aacffdeb1462dbea4ed6379630e62a4593ce79e954a"
+    },
+    {
+      "source": "healthcare-demo/infra-pipeline/catalogs.tf",
+      "source_sha256": "4648c696d9d40c82135bf2fa87464a8bdd4251a1cab6afaed270c1bea5526226",
+      "destination": "infra/aws/glue/catalogs.tf",
+      "published_sha256": "191de56d79fbab7f1b522c56d73f9286db628cf6834ee310e12b60d59265d713"
+    },
+    {
+      "source": "healthcare-demo/infra-pipeline/main.tf",
+      "source_sha256": "688287d3dddee5c9243e753cc05ab5afe25a1d6c0c48f454d4aa30b83bcd11c0",
+      "destination": "infra/aws/glue/main.tf",
+      "published_sha256": "f115ba26f6cbe6e96a079342cfebf2872afce4f3cac60c64d215dc78123436e8"
+    },
+    {
+      "source": "healthcare-demo/infra-pipeline/variables.tf",
+      "source_sha256": "522dd5cba13102bed3a921ac3e50306bb4283d99250a5b309773d89626c0a0b4",
+      "destination": "infra/aws/glue/variables.tf",
+      "published_sha256": "f9f1817d0576f8416ef92d8e498708b4d79974f70020ba3bfb1e9ec0197cdf59"
+    }
+  ],
+  "lockfile": {
+    "source": "healthcare-demo/infra-ecs/.terraform.lock.hcl",
+    "aws_provider_version": "5.100.0",
+    "sha256": "6c4d28a195e36fd3194ec9a9b4c1b7366e42aee81a05aa01e296f34b2cac9792",
+    "used_for": [
+      "infra/aws/ecs",
+      "infra/aws/glue"
+    ]
+  },
+  "adaptations": [
+    "Replaced private ECR images, Bedrock inference-profile ARN, and S3 bucket with input variables.",
+    "Used the region input consistently in provider, endpoint, and logging configuration.",
+    "Removed an outdated ephemeral-storage comment; retained the existing EFS implementation.",
+    "Formatted copied Terraform with terraform fmt; preserved historical resource definitions and wiring."
+  ],
+  "excluded": [
+    "Terraform state and plans",
+    "tfvars and credentials",
+    "private data and database dumps",
+    "provider binaries and caches",
+    "original marketing-site infrastructure"
+  ]
+}
