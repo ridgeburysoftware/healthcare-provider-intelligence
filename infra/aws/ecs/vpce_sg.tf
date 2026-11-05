@@ -4,17 +4,14 @@ resource "aws_security_group" "vpce_sg" {
   description = "Allow HTTPS from ECS tasks to interface endpoints"
   vpc_id      = var.vpc_id
 
-  # no inline ingress rules here (we’ll add as separate rule resources)
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # no inline ingress rules here (weâ€™ll add as separate rule resources)
+  # Interface endpoints only answer permitted inbound requests; no outbound rule is needed.
+  egress = []
 }
 
 # Allow HTTPS into the endpoint ENIs from the app task SG
 resource "aws_security_group_rule" "vpce_ingress_from_app" {
+  description              = "HTTPS from the configured application tasks"
   type                     = "ingress"
   security_group_id        = aws_security_group.vpce_sg.id
   from_port                = 443
@@ -25,6 +22,7 @@ resource "aws_security_group_rule" "vpce_ingress_from_app" {
 
 # Allow HTTPS into the endpoint ENIs from neo4j task SG (so neo4j can reach CloudWatch logs too)
 resource "aws_security_group_rule" "vpce_ingress_from_neo4j" {
+  description              = "HTTPS from Neo4j tasks"
   type                     = "ingress"
   security_group_id        = aws_security_group.vpce_sg.id
   from_port                = 443

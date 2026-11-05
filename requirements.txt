@@ -1,8 +1,8 @@
-# Direct UI/API runtime versions from the source application's working environment.
+# Runtime dependencies, including reviewed security updates.
 # Transitive dependencies are resolved by pip; this is not a full hash lock.
 fastapi==0.137.1
 uvicorn==0.40.0
-streamlit==1.53.1
+streamlit==1.67.0
 neo4j==6.1.0
 pandas==2.3.3
 plotly==6.5.2
@@ -10,3 +10,6 @@ networkx==3.6.1
 boto3==1.42.47
 openai==2.18.0
 langchain-core==1.4.7
+
+# Streamlit allows Pillow 13; pin the image-codec security fixes explicitly.
+pillow==13.0.0

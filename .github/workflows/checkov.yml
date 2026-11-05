@@ -1,0 +1,55 @@
+name: Checkov
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '37 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checkov-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: Infrastructure security scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare report directory
+        run: mkdir -p "$RUNNER_TEMP/checkov"
+      - name: Scan Terraform, Dockerfile and GitHub Actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --network none --read-only --cap-drop ALL \
+            --security-opt no-new-privileges --workdir /scan --user "$(id -u):$(id -g)" \
+            --tmpfs /tmp:rw,noexec,nosuid,size=256m \
+            --env HOME=/tmp --env PYTHONDONTWRITEBYTECODE=1 \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/scan,readonly" \
+            --mount "type=bind,source=$RUNNER_TEMP/checkov,target=/reports" \
+            bridgecrew/checkov:3.4.3@sha256:bfe9d70bb7f044aba49bd99675813445f106dee6072da583f51008cb667f3a63 \
+            --directory . --framework terraform dockerfile github_actions \
+            --skip-download --quiet --output cli --output sarif \
+            --output-file-path console,/reports/results.sarif
+      - name: Publish infrastructure findings to code scanning
+        if: >-
+          ${{ !cancelled() && github.actor != 'dependabot[bot]' &&
+              (github.event_name != 'pull_request' ||
+               github.event.pull_request.head.repo.full_name == github.repository) }}
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4
+        with:
+          sarif_file: ${{ runner.temp }}/checkov/results.sarif
+          category: checkov-infrastructure

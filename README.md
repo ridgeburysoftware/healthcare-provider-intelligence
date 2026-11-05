@@ -1,5 +1,9 @@
 # Healthcare Provider Intelligence
 
+[![Gitleaks](https://github.com/ridgeburysoftware/healthcare-provider-intelligence/actions/workflows/gitleaks.yml/badge.svg?branch=main)](https://github.com/ridgeburysoftware/healthcare-provider-intelligence/actions/workflows/gitleaks.yml)
+[![Checkov](https://github.com/ridgeburysoftware/healthcare-provider-intelligence/actions/workflows/checkov.yml/badge.svg?branch=main)](https://github.com/ridgeburysoftware/healthcare-provider-intelligence/actions/workflows/checkov.yml)
+[![CodeQL](https://github.com/ridgeburysoftware/healthcare-provider-intelligence/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/ridgeburysoftware/healthcare-provider-intelligence/actions/workflows/github-code-scanning/codeql)
+
 ## Project overview and capabilities
 
 A public engineering portfolio project by **Ridgebury Software**, demonstrating healthcare data pipelines, graph analytics, vector similarity, and optional AI-assisted evidence review.
@@ -136,6 +140,12 @@ Tests use synthetic vectors and mocked query/model responses. They cover native 
 ### Repository data boundary
 
 Keep large CMS datasets, generated FAISS indexes, processed artifacts, secrets, credentials, private environment files, Terraform state/plans, and database dumps outside committed source. Local configuration and data belong in ignored paths such as `.env`, `.local-data/`, or `data/`; verify exclusion before adding generated files. The checked-in `.env.example` contains configuration names without credentials.
+
+## Security checks
+
+Gitleaks scans fetched Git history; Checkov scans Terraform, the Dockerfile, and GitHub Actions. Both run on pushes to `main`, pull requests, a weekly schedule, and manual dispatch. GitHub-managed CodeQL covers Python and JavaScript/TypeScript without a duplicate checked-in workflow. Dependabot checks Python, frontend npm, Docker, Actions, and both Terraform roots weekly.
+
+Checkov is a blocking check: unresolved historical AWS configuration findings are retained in its results, not baselined or soft-failed. A passing CodeQL run or dependency audit does not clear those infrastructure findings. See [the security review and remaining deployment-specific gaps](docs/SECURITY-REVIEW.md).
 
 ## License
 

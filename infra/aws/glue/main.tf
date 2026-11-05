@@ -169,6 +169,10 @@ resource "aws_athena_workgroup" "primary_demo" {
 
     result_configuration {
       output_location = "s3://${var.artifacts_bucket}/${var.athena_results_prefix}"
+
+      encryption_configuration {
+        encryption_option = "SSE_S3"
+      }
     }
   }
 }

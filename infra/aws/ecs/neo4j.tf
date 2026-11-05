@@ -14,7 +14,7 @@ locals {
 # -------------
 resource "aws_cloudwatch_log_group" "neo4j" {
   name              = "/ecs/healthcare-neo4j"
-  retention_in_days = 7
+  retention_in_days = 365
 }
 
 # -------------
@@ -27,15 +27,25 @@ resource "aws_security_group" "neo4j_sg" {
   vpc_id      = var.vpc_id
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "HTTPS for registry and AWS endpoints"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "NFS to EFS mount targets within the supplied VPC"
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = [data.aws_vpc.neo4j_network.cidr_block]
   }
 }
 
 # App -> Neo4j Bolt
 resource "aws_security_group_rule" "neo4j_ingress_bolt" {
+  description              = "Bolt from the configured application task security group"
   type                     = "ingress"
   security_group_id        = aws_security_group.neo4j_sg.id
   from_port                = local.neo4j_bolt_port
@@ -46,6 +56,7 @@ resource "aws_security_group_rule" "neo4j_ingress_bolt" {
 
 # (Optional internal) App -> Neo4j Browser
 resource "aws_security_group_rule" "neo4j_ingress_http" {
+  description              = "Internal Neo4j Browser from the configured application tasks"
   type                     = "ingress"
   security_group_id        = aws_security_group.neo4j_sg.id
   from_port                = local.neo4j_http_port

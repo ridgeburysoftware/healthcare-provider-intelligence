@@ -12,16 +12,13 @@ resource "aws_security_group" "efs_sg" {
     security_groups = [aws_security_group.neo4j_sg.id]
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # No outbound connections: security groups allow replies to permitted NFS requests.
+  egress = []
 }
 
 resource "aws_efs_file_system" "neo4j" {
   creation_token = "healthcare-neo4j-efs"
+  encrypted      = true
 
   lifecycle_policy {
     transition_to_ia = "AFTER_30_DAYS"

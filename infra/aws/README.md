@@ -11,9 +11,15 @@ The original source commit and file hashes are recorded in [SOURCE-PROVENANCE.js
 
 ## Publication changes
 
-Private ECR image locations, the account-specific Bedrock inference-profile ARN, and the original S3 bucket were replaced by input variables. Region references now use the region input. Resource definitions, historical networking inputs, IAM policies, workload commands, and sizing were retained. An obsolete comment describing Neo4j storage as ephemeral was corrected to match its existing EFS mount.
+Private ECR image locations, the account-specific Bedrock inference-profile ARN, and the original S3 bucket were replaced by input variables. Region references now use the region input. The initial publication retained resource definitions, historical networking inputs, IAM policies, workload commands, and sizing. Subsequent safe security hardening is documented below. An obsolete comment describing Neo4j storage as ephemeral was corrected to match its existing EFS mount.
 
 There are no AWS credentials, state files, plans, private tfvars, database dumps, or provider binaries in this directory. The checked-in lockfiles select the original AWS provider 5.100.0. `.tfvars.example` files contain placeholders; real `.tfvars` files remain ignored.
+
+## Security hardening after publication
+
+The security review added EFS encryption at rest, constrained security-group egress, explicit default-group restrictions, subnet public-IP defaults, ALB header/deletion protection, Container Insights, longer CloudWatch retention, and Athena result encryption. Workload commands and application source remain unchanged. These templates still require deployment review; [23 deployment-specific Checkov findings remain open](../../docs/SECURITY-REVIEW.md).
+
+The provenance file records the historical extraction source, not a claim that later hardened files are byte-identical to it. Dependency diagrams now reflect the current checked-in configuration. No AWS deployment was performed. Enabling EFS encryption can replace an existing unencrypted filesystem and requires a data migration review; review egress CIDRs and externally supplied VPC inputs before applying any changes.
 
 ## Local inspection and diagrams
 
@@ -51,4 +57,4 @@ No AWS plan, apply, live infrastructure validation, data ingestion, or model cal
 
 ## Publication validation
 
-Both roots passed `terraform validate` with zero errors and zero warnings, and `terraform fmt -check -recursive infra/aws` passed. Both SVG diagrams were regenerated from the published configuration; their resource nodes and dependency edges match the original configurations exactly. Original source file hashes were verified unchanged. No AWS plan or apply was run.
+Both roots passed `terraform validate` with zero errors and zero warnings, and `terraform fmt -check -recursive infra/aws` passed. Both SVG diagrams were regenerated from the current checked-in configuration. The original extraction had matching source hashes and dependency graphs; subsequent security hardening intentionally changes the current configuration graph. No AWS plan or apply was run.

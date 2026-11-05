@@ -1,0 +1,13 @@
+title = "Healthcare Provider Intelligence secret scanning"
+
+[extend]
+useDefault = true
+
+# An EFS idempotency/creation identifier is public resource metadata, not a credential.
+# Both the exact file and complete declaration must match; no files or rules are disabled.
+[[allowlists]]
+description = "Exact historical EFS creation identifier (not an authentication token)"
+condition = "AND"
+paths = ['''^infra/aws/ecs/efs\.tf$''']
+regexTarget = "line"
+regexes = ['''^\s*creation_token\s*=\s*"healthcare-neo4j-efs"\s*$''']

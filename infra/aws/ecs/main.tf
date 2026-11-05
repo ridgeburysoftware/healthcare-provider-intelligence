@@ -29,12 +29,24 @@ data "aws_availability_zones" "az" {
   state = "available"
 }
 
+# The retained Neo4j stack accepts a separately supplied VPC.
+data "aws_vpc" "neo4j_network" {
+  id = var.vpc_id
+}
+
 resource "aws_vpc" "vpc" {
   cidr_block           = "10.50.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = { Name = "${local.app_name}-vpc" }
+}
+
+# Application resources use explicit security groups, not this VPC default group.
+resource "aws_default_security_group" "default" {
+  vpc_id  = aws_vpc.vpc.id
+  ingress = []
+  egress  = []
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -46,7 +58,7 @@ resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.50.1.0/24"
   availability_zone       = data.aws_availability_zones.az.names[0]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   tags                    = { Name = "${local.app_name}-public-a" }
 }
 
@@ -54,7 +66,7 @@ resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.50.2.0/24"
   availability_zone       = data.aws_availability_zones.az.names[1]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
   tags                    = { Name = "${local.app_name}-public-b" }
 }
 
@@ -83,8 +95,9 @@ resource "aws_route_table_association" "public_b" {
 # Security groups
 # -----------------------------
 resource "aws_security_group" "alb_sg" {
-  name   = "${local.app_name}-alb-sg"
-  vpc_id = aws_vpc.vpc.id
+  name        = "${local.app_name}-alb-sg"
+  description = "Public application load balancer"
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     description = "HTTP"
@@ -95,16 +108,18 @@ resource "aws_security_group" "alb_sg" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    description = "Forward requests to Streamlit within this VPC"
+    from_port   = local.container_port
+    to_port     = local.container_port
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.vpc.cidr_block]
   }
 }
 
 resource "aws_security_group" "task_sg" {
-  name   = "${local.app_name}-task-sg"
-  vpc_id = aws_vpc.vpc.id
+  name        = "${local.app_name}-task-sg"
+  description = "Application tasks reachable only from the load balancer"
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     description     = "Streamlit from ALB"
@@ -115,10 +130,19 @@ resource "aws_security_group" "task_sg" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    description = "HTTPS for AWS endpoints and model invocation"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Bolt to the separately supplied Neo4j VPC"
+    from_port   = 7687
+    to_port     = 7687
+    protocol    = "tcp"
+    cidr_blocks = [data.aws_vpc.neo4j_network.cidr_block]
   }
 }
 
@@ -126,10 +150,12 @@ resource "aws_security_group" "task_sg" {
 # ALB
 # -----------------------------
 resource "aws_lb" "alb" {
-  name               = "${local.app_name}-alb"
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [aws_subnet.public_a.id, aws_subnet.public_b.id]
+  name                       = "${local.app_name}-alb"
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb_sg.id]
+  subnets                    = [aws_subnet.public_a.id, aws_subnet.public_b.id]
+  drop_invalid_header_fields = true
+  enable_deletion_protection = true
 }
 
 resource "aws_lb_target_group" "tg" {
@@ -168,11 +194,16 @@ resource "aws_lb_listener" "http" {
 # -----------------------------
 resource "aws_ecs_cluster" "cluster" {
   name = "${local.app_name}-cluster"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_cloudwatch_log_group" "logs" {
   name              = "/ecs/${local.app_name}"
-  retention_in_days = 7
+  retention_in_days = 365
 }
 
 data "aws_iam_policy_document" "task_assume" {
