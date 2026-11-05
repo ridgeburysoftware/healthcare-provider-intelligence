@@ -6,7 +6,7 @@ The repository includes the React review workspace, FastAPI backend, original St
 
 ## Technology
 
-Python, FastAPI, React, Vite, Tailwind CSS, Neo4j/Cypher, FAISS, NumPy, pandas, PyArrow, NetworkX, python-louvain, Streamlit, Plotly, and Docker Compose. Optional AI explanation adapters use Amazon Bedrock and OpenAI; the React API's explanation action uses Bedrock. Model actions are disabled while no model is configured.
+Python, FastAPI, React, Vite, Tailwind CSS, Neo4j/Cypher, FAISS, NumPy, pandas, PyArrow, NetworkX, python-louvain, Streamlit, Plotly, and Docker Compose. Optional AI explanations use OpenAI by default; Amazon Bedrock remains available through explicit configuration. Explanations describe recorded evidence and do not change drift scores, communities, or query results. Model actions are disabled while the selected provider is not configured.
 
 ## Standalone local setup
 
@@ -42,6 +42,18 @@ python scripts/run_local.py
 Start only this repository's graph first with `docker compose up -d graph`. The launcher reads this workspace's `.env` or explicitly provided environment settings. It does not inspect the old `neo4j` container. The retained Streamlit UI is available with `python scripts/run_local.py --legacy` on port **8521**.
 
 Frontend development uses `npm run dev --prefix frontend` on port **5190**, proxying API requests to 8520.
+
+## Optional OpenAI explanations
+
+Set `AI_PROVIDER=openai` and `OPENAI_API_KEY` in the server environment or this workspace's ignored `.env`. `OPENAI_MODEL` defaults to the existing adapter's `gpt-4o-mini` and can be overridden. Restart the local app (or recreate the app container) after changing configuration. Never use a `VITE_` variable for the key or commit credentials.
+
+Select a provider and click **Explain selected provider**. Only this action calls OpenAI; loading pages, browsing the graph, and exporting evidence do not. The Responses API receives a bounded factual packet with provider/peer identifiers, the stored drift score, and up to ten recorded service/drug comparisons. It uses structured output, `store=false`, a 30-second SDK timeout, and no automatic SDK retries. Driver identifiers and numbers in the response are copied from supplied evidence after validating model-selected indexes. Free-text interpretation remains AI-generated and should be checked against the evidence.
+
+Missing configuration disables the button. Missing comparison evidence produces an insufficient-evidence result without a model call. Provider failures show a recoverable message; analytics remain available. The API advertises only the selected provider name and availability, never the key.
+
+To use the original AWS adapter instead, set `AI_PROVIDER=bedrock` with `BEDROCK_MODEL_ID` and AWS credentials. Set `AI_PROVIDER=none` to disable explanations even when credentials are present. The original Streamlit interface retains its own provider selector.
+
+API reference: [OpenAI Responses](https://developers.openai.com/api/reference/python/resources/responses/methods/create).
 
 ## Tests
 

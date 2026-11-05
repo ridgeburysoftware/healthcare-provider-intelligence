@@ -3,6 +3,8 @@ WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm ci --ignore-scripts
 COPY frontend/ ./
+ARG PUBLIC_BASE_PATH=/
+ENV PUBLIC_BASE_PATH=${PUBLIC_BASE_PATH}
 RUN npm run build
 
 FROM python:3.11-slim-bookworm

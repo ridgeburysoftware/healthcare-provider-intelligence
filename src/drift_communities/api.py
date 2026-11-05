@@ -11,6 +11,7 @@ from neo4j.exceptions import Neo4jError, ServiceUnavailable
 from .queries import list_runs, community_sizes, providers_in_community, bounded_edges
 from .graph_viz import layout_with_centroid, drift_band
 from .explain_context import build_explain_context, evidence_snapshot_metrics
+from .ai import ai_status, explain
 
 app = FastAPI(title='Provider Intelligence', docs_url=None, redoc_url=None)
 
@@ -28,7 +29,7 @@ def overview():
     if not runs: raise HTTPException(503,'No analysis runs were found in the database.')
     run = str(runs[0]['run_id'])
     groups = records(community_sizes(run))
-    return {'run_id':run,'runs':runs,'groups':groups,'provider_count':sum(g['n_providers'] for g in groups),'source':'Preserved CMS-derived provider analysis','ai_available':bool(os.getenv('BEDROCK_MODEL_ID'))}
+    return {'run_id':run,'runs':runs,'groups':groups,'provider_count':sum(g['n_providers'] for g in groups),'source':'Preserved CMS-derived provider analysis',**ai_status()}
 
 @app.get('/api/groups/{cid}')
 def group(cid:int,run_id:str,min_sim:float=Query(.25,ge=0,le=.9),top20:bool=False):
@@ -56,11 +57,10 @@ def provider(npi:str,run_id:str,cid:int):
 
 @app.post('/api/providers/{npi}/explanation')
 def explanation(npi:str,run_id:str,cid:int):
-    if not os.getenv('BEDROCK_MODEL_ID'): raise HTTPException(503,'AI explanation is not configured. Evidence remains available without an AI provider.')
+    if not ai_status()['ai_available']: raise HTTPException(503,'AI explanation is not configured. Evidence remains available without an AI provider.')
     ctx=build_explain_context(run_id,cid,npi,5,10)
     if 'error' in ctx: raise HTTPException(404,'Provider not found in this peer group.')
-    from .llm_bedrock import explain_with_bedrock
-    result=explain_with_bedrock(ctx)
+    result=explain(ctx)
     if 'error' in result: raise HTTPException(502,'The AI provider could not generate an explanation. Review the evidence directly or check the local provider configuration.')
     return result
 
