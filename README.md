@@ -1,35 +1,112 @@
 # Healthcare Provider Intelligence
 
-A Ridgebury Software engineering portfolio application for exploring provider similarity communities, service/drug evidence, and differences from similarity peers.
+## Project overview and capabilities
 
-The repository includes the React review workspace, FastAPI backend, original Streamlit interface, FAISS similarity/Louvain community pipeline, Neo4j query and graph-writing modules, AWS Glue transformation jobs, tests, and architecture diagrams.
+A public engineering portfolio project by **Ridgebury Software**, demonstrating healthcare data pipelines, graph analytics, vector similarity, and optional AI-assisted evidence review.
 
-## Technology
+The project combines CMS provider utilization data with provider similarity communities and recorded service/drug comparisons. It includes the current React/FastAPI review application, the original Streamlit interface, Python analysis pipelines, and the original AWS infrastructure source.
 
-Python, FastAPI, React, Vite, Tailwind CSS, Neo4j/Cypher, FAISS, NumPy, pandas, PyArrow, NetworkX, python-louvain, Streamlit, Plotly, and Docker Compose. Optional AI explanations use OpenAI by default; Amazon Bedrock remains available through explicit configuration. Explanations describe recorded evidence and do not change drift scores, communities, or query results. Model actions are disabled while the selected provider is not configured.
+Capabilities demonstrated:
 
-## Standalone local setup
+- Transform CMS Medicare Part B, Part D, and provider reference data into analysis-ready datasets.
+- Build provider feature signatures, find similarity peers with FAISS, and detect communities with Louvain.
+- Store run-scoped provider relationships, communities, and utilization evidence in Neo4j.
+- Explore the peer graph, inspect provider drift scores, review underlying comparisons, and export evidence.
+- Generate optional AI explanations from recorded evidence without changing analytics or scores.
 
-Install Docker with Compose and Python 3.11+:
+This repository presents the implementation and engineering artifacts. The populated demonstration uses separately prepared data; a source checkout does not include that analysis. Drift and similarity differences do not establish fraud, clinical appropriateness, or compliance.
+
+## Application screenshots
+
+**Provider review workspace** — peer communities, a similarity graph, and the selected provider's recorded drift score.
+
+![Healthcare Provider Intelligence review workspace and provider similarity graph](https://ridgeburysoftware.com/assets/provider-intelligence-workspace.png)
+
+**Underlying evidence** — recorded service/drug utilization compared with similarity peers.
+
+![Provider utilization evidence and peer comparisons](https://ridgeburysoftware.com/assets/provider-intelligence-evidence.png)
+
+These static previews show prepared CMS-derived analysis. Images are hosted on the Ridgebury Software project site; datasets and analysis artifacts are not embedded in this repository.
+
+## Original AWS architecture and deployment
+
+The original implementation ran on AWS. Glue/PySpark jobs transformed CMS data into S3 datasets; the Python/FAISS pipeline built similarity relationships and communities for Neo4j. The original Streamlit application ran on ECS/Fargate, with Bedrock providing optional generative AI integration.
+
+![Original Provider Intelligence AWS architecture](https://ridgeburysoftware.com/assets/provider-intelligence-architecture.svg)
+
+The infrastructure source includes ECS/Fargate, an Application Load Balancer, VPC networking and endpoints, EFS-backed Neo4j storage, service discovery, IAM, CloudWatch, Glue catalogs/crawlers/jobs, and an Athena workgroup.
+
+- [AWS Terraform documentation and deployment assumptions](infra/aws/README.md)
+- [ECS/Fargate configuration](infra/aws/ecs/)
+- [Glue configuration](infra/aws/glue/)
+- [Generated Terraform dependency diagrams](docs/terraform/README.md)
+
+Account-specific image locations, the Bedrock inference-profile ARN, and the original S3 bucket have been replaced by inputs. The Terraform preserves historical workload assumptions, including separately supplied images, networking inputs, data, and job arguments; those prerequisites and limitations are documented in the infrastructure README.
+
+The current React/FastAPI demonstration is hosted independently of AWS and uses OpenAI for optional evidence explanations. The historical AWS Terraform describes the original deployment and does not configure the current hosted demo. The architecture image provides a platform overview; the dependency diagrams are generated directly from the retained Terraform resource definitions.
+
+## Technical implementation and technology stack
+
+| Engineering area | Implementation | Source |
+| --- | --- | --- |
+| Data engineering | AWS Glue, PySpark, S3, Parquet, pandas, and PyArrow for CMS ingestion and feature preparation | [`pipelines/glue/jobs/`](pipelines/glue/jobs/) |
+| Vector and community analysis | Python, NumPy, FAISS, NetworkX, and python-louvain for similarity search, peer communities, and drift scoring | [`provider_graph/`](pipelines/ecs_build/provider_graph/) |
+| Graph storage and retrieval | Neo4j/Cypher for provider relationships, run-scoped analysis, and utilization evidence | [`queries.py`](src/drift_communities/queries.py), [`neo.py`](pipelines/ecs_build/provider_graph/neo.py) |
+| Review application | React, Vite, Tailwind CSS, and FastAPI for graph exploration and evidence review | [`frontend/`](frontend/), [`api.py`](src/drift_communities/api.py) |
+| AI explanations | OpenAI Responses API in the current application; Amazon Bedrock adapter retained from AWS | [`ai.py`](src/drift_communities/ai.py), [`llm_openai.py`](src/drift_communities/llm_openai.py), [`llm_bedrock.py`](src/drift_communities/llm_bedrock.py) |
+| Infrastructure and packaging | Terraform, ECS/Fargate, Docker, and Docker Compose | [`infra/aws/`](infra/aws/), [`Dockerfile`](Dockerfile), [`compose.yaml`](compose.yaml) |
+| Original interface | Streamlit and Plotly | [`app.py`](src/drift_communities/app.py) |
+
+The graph pipeline constructs provider feature signatures, searches cosine-similarity peers, runs Louvain community detection, computes drift scores, and writes analysis relationships to Neo4j. The application retrieves those stored results rather than rebuilding the analysis on each request.
+
+Optional AI explanations receive a bounded packet of provider/peer identifiers, the stored drift score, and recorded service/drug comparisons. The OpenAI adapter uses structured responses, validates evidence references, and copies driver values from the supplied evidence. Free-text interpretation remains AI-generated; it does not change community membership, drift scores, or query results.
+
+## Live demonstration link
+
+**[Open Healthcare Provider Intelligence](https://ridgeburysoftware.com/demos/providers/)**
+
+The hosted demonstration uses a separately prepared CMS-derived analysis and populated Neo4j database. It provides the review workflow illustrated above without requiring visitors to prepare the data locally.
+
+[Project page and architecture overview](https://ridgeburysoftware.com/projects/provider-intelligence/)
+
+## Local development and setup requirements
+
+Local setup is available for developers inspecting or extending the implementation. **On a fresh checkout, running Docker Compose starts the application services and an empty Neo4j database; it does not produce the populated demonstration.**
+
+### Data required for meaningful functionality
+
+Reproducing the analysis and review workflows requires:
+
+1. **CMS provider datasets:** Medicare Part B utilization, Part D prescribing, and provider reference data used by the transformations.
+2. **Processed analysis artifacts:** compatible feature/vector datasets and generated provider similarity, community, and drift results for a selected analysis run.
+3. **Populated Neo4j data:** provider and utilization records plus the corresponding run-scoped communities, memberships, similarity relationships, and evidence used by the API.
+
+Source datasets and processed artifacts are needed to reproduce or rebuild the analysis. The review application's request path reads the populated graph; it does not read raw CMS files or run the ingestion pipeline during startup. Without the required graph data, the UI reports that no analysis is available and cannot provide meaningful provider comparisons.
+
+CMS datasets, generated FAISS indexes, processed analysis outputs, and the preserved demonstration database/dump are not included. Local startup does not download CMS data, process it, restore the hosted database, or seed an example analysis. The hosted demo's displayed counts should not be expected from a fresh checkout.
+
+### Tooling and container setup
+
+Requirements: Docker with Compose and Python 3.11+. Source-based frontend development also needs Node.js/npm; the Docker frontend build uses Node 22.
 
 ```sh
 python scripts/configure_local.py
 docker compose up -d --build
 ```
 
-- Review app: **http://127.0.0.1:8520**
+- Local review app: **http://127.0.0.1:8520**
 - Neo4j Browser: **http://127.0.0.1:17474**
 - Local Bolt endpoint: **bolt://127.0.0.1:17687**
 
-The setup script generates a private password only in this repository's ignored `.env`. Compose uses the project name `healthcare-provider-intelligence` and a separate graph volume. It never reads, starts, inspects, mounts, or restores the original application's database or credentials.
+The configuration script generates a password in this workspace's ignored `.env`. Compose uses a separate `healthcare-provider-intelligence` project and graph volume. It does not inspect or restore another application's database. These commands prepare the runtime only; populate compatible graph data separately before expecting the review workflows to function.
 
-**The graph starts empty.** The preserved CMS-derived analysis and database dump from the original installation are not part of this source repository. The UI reports that no analysis is available until an explicitly prepared dataset has been loaded. The historical 14,916 memberships/18 communities are not promised for a fresh checkout.
+### Developing from source
 
-## Development
-
-Use an independent virtual environment and the frontend's own lockfile:
+Use the graph service only for this development mode. If the Compose application is already running, stop its `app` service before starting the Python server on the same port.
 
 ```sh
+python scripts/configure_local.py
+docker compose up -d graph
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # Linux/macOS: source .venv/bin/activate
@@ -39,45 +116,39 @@ npm run build --prefix frontend
 python scripts/run_local.py
 ```
 
-Start only this repository's graph first with `docker compose up -d graph`. The launcher reads this workspace's `.env` or explicitly provided environment settings. It does not inspect the old `neo4j` container. The retained Streamlit UI is available with `python scripts/run_local.py --legacy` on port **8521**.
+The launcher reads this workspace's `.env` or explicitly provided environment settings. Frontend development uses `npm run dev --prefix frontend` on port **5190**, proxying API requests to 8520. The original Streamlit interface remains available with `python scripts/run_local.py --legacy` on port **8521** and has the same underlying data requirements.
 
-Frontend development uses `npm run dev --prefix frontend` on port **5190**, proxying API requests to 8520.
+### Preparing analysis data
 
-## Optional OpenAI explanations
+The Glue jobs under `pipelines/glue/jobs/` require their AWS Glue/PySpark runtime and explicitly supplied data paths and job arguments. The modular graph pipeline is under `pipelines/ecs_build/provider_graph/`; install `requirements-pipeline.txt` to run it outside the development environment. It requires `DRUGS_S3`, `HCPCS_S3`, `UNIFIED_S3`, run settings, and Neo4j connection settings. See [`config.py`](pipelines/ecs_build/provider_graph/config.py) for its inputs.
 
-Set `AI_PROVIDER=openai` and `OPENAI_API_KEY` in the server environment or this workspace's ignored `.env`. `OPENAI_MODEL` defaults to the existing adapter's `gpt-4o-mini` and can be overridden. Restart the local app (or recreate the app container) after changing configuration. Never use a `VITE_` variable for the key or commit credentials.
+[`scripts/seed_neo4j.py`](scripts/seed_neo4j.py) is a retained loader for separately prepared parquet files. Its expected paths/schema and `NEO4J_PASSWORD` setting must be supplied explicitly; it is not run by Compose and does not build a complete community analysis by itself. The review app and graph pipeline use `NEO4J_PASS`. Loading and analysis are deliberate developer tasks, not an automated fresh-checkout demonstration.
 
-Select a provider and click **Explain selected provider**. Only this action calls OpenAI; loading pages, browsing the graph, and exporting evidence do not. The Responses API receives a bounded factual packet with provider/peer identifiers, the stored drift score, and up to ten recorded service/drug comparisons. It uses structured output, `store=false`, a 30-second SDK timeout, and no automatic SDK retries. Driver identifiers and numbers in the response are copied from supplied evidence after validating model-selected indexes. Free-text interpretation remains AI-generated and should be checked against the evidence.
+### Optional AI configuration
 
-Missing configuration disables the button. Missing comparison evidence produces an insufficient-evidence result without a model call. Provider failures show a recoverable message; analytics remain available. The API advertises only the selected provider name and availability, never the key.
+Set `AI_PROVIDER=openai` and `OPENAI_API_KEY` in the server environment or this workspace's ignored `.env`. `OPENAI_MODEL` defaults to `gpt-4o-mini` and can be overridden. Restart the app or recreate its container after changing configuration. Keep credentials server-side; never use a `VITE_` variable for a key.
 
-To use the original AWS adapter instead, set `AI_PROVIDER=bedrock` with `BEDROCK_MODEL_ID` and AWS credentials. Set `AI_PROVIDER=none` to disable explanations even when credentials are present. The original Streamlit interface retains its own provider selector.
+In the React review app, **Explain selected provider** initiates the model request. Browsing the graph, loading pages, and exporting evidence do not call OpenAI. The adapter uses `store=false`, a 30-second SDK timeout, and no automatic SDK retries. Missing configuration disables the action; missing comparison evidence returns an insufficient-evidence result without a model call. Provider errors leave the analytics available.
 
-API reference: [OpenAI Responses](https://developers.openai.com/api/reference/python/resources/responses/methods/create).
+Set `AI_PROVIDER=bedrock` with `BEDROCK_MODEL_ID` and AWS credentials to use the original AWS adapter. Set `AI_PROVIDER=none` to disable explanations. The original Streamlit interface retains its own provider selector.
 
-## Tests
+### Tests
 
 ```sh
 python -m pytest
 npm run build --prefix frontend
 ```
 
-Tests include the existing query/evidence and graph-writing unit tests, pipeline tests, an actual FAISS native-path check on synthetic vectors, and API checks with synthetic query responses. They do not need a production database, CMS download, AWS account, or model call.
+Tests use synthetic vectors and mocked query/model responses. They cover native FAISS, feature and graph-writing logic, evidence helpers, API behavior, and explanation handling without a populated demonstration database, CMS download, AWS account, or live model call. Passing these tests does not populate a local analysis.
 
-## Graph pipeline and data
+### Repository data boundary
 
-`pipelines/ecs_build/provider_graph/` builds provider feature signatures, searches cosine-similarity peers with FAISS, runs Louvain community detection, computes drift scores, and writes run-scoped relationships to Neo4j. Install `requirements-pipeline.txt` to run it outside the development environment.
-
-`pipelines/glue/jobs/` contains the source project's AWS Glue/PySpark transformations; those jobs need their managed AWS runtime. The graph pipeline requires explicitly supplied `DRUGS_S3`, `HCPCS_S3`, `UNIFIED_S3`, run settings, and Neo4j credentials. No production S3 location, AWS credentials, Terraform state, or database dump is included. `scripts/seed_neo4j.py` is a retained data-loading utility that requires separately supplied parquet files and explicit database settings; it is not run during startup.
-
-## Original AWS infrastructure
-
-The historical [ECS/Fargate and Glue Terraform](infra/aws/README.md) is included with account-specific settings replaced by inputs. It documents the original AWS implementation; the current React/FastAPI demo uses a separate deployment. See the [generated dependency diagrams](docs/terraform/README.md) and the infrastructure README for prerequisites, retained historical limitations, and local validation commands.
+Keep large CMS datasets, generated FAISS indexes, processed artifacts, secrets, credentials, private environment files, Terraform state/plans, and database dumps outside committed source. Local configuration and data belong in ignored paths such as `.env`, `.local-data/`, or `data/`; verify exclusion before adding generated files. The checked-in `.env.example` contains configuration names without credentials.
 
 ## Provenance and scope
 
-Extracted from RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90` with a fresh repository history. See [SOURCE-PROVENANCE.json](SOURCE-PROVENANCE.json) and [EXTRACTION-REPORT.md](EXTRACTION-REPORT.md). The original checkout, existing containers, graph, and other apps are unchanged.
+The application was extracted from RidgefieldSoftware commit `0440f1ecb192e95dd926d69b88b5c3bb08a99a90` with a fresh repository history. [SOURCE-PROVENANCE.json](SOURCE-PROVENANCE.json) and [EXTRACTION-REPORT.md](EXTRACTION-REPORT.md) record that extraction. The original checkout and its applications were left unchanged.
 
-The original extraction excluded AWS infrastructure; a later publication pass added the ECS/Fargate and Glue Terraform under `infra/aws/` with deployment-specific inputs. The old cloud marketing site, private runbook, and original S3 dump-restoration container remain excluded. Terraform dependency diagrams remain under `docs/terraform/`. No cloud infrastructure or public application deployment was performed.
+The historical ECS/Fargate and Glue Terraform was added afterward with deployment-specific settings replaced by inputs; its source hashes are recorded in [infra/aws/SOURCE-PROVENANCE.json](infra/aws/SOURCE-PROVENANCE.json). The original marketing-site infrastructure, private runbook, and S3 dump-restoration container remain excluded.
 
-Drift and similarity differences do not establish fraud, clinical appropriateness, or compliance. This repository does not grant a new open-source license for original project code; third-party dependencies retain their licenses.
+This repository does not grant a new open-source license for original project code; third-party dependencies retain their licenses.
