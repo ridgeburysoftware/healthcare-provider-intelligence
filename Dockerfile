@@ -7,7 +7,7 @@ ARG PUBLIC_BASE_PATH=/
 ENV PUBLIC_BASE_PATH=${PUBLIC_BASE_PATH}
 RUN npm run build
 
-FROM python:3.11-slim-bookworm
+FROM python:3.15-slim-bookworm
 RUN groupadd --gid 10001 provider && useradd --uid 10001 --gid 10001 --create-home provider
 WORKDIR /app
 COPY requirements.txt ./
